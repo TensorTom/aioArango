@@ -113,7 +113,7 @@ class Graph(with_metaclass(Graph_metaclass, object)):
     def getURL(self):
         return "%s/%s" % (self.database.getGraphsURL(), self._key)
 
-    def createVertex(self, collectionName, docAttributes, waitForSync = False):
+    def createVertex(self, collectionName, docAttributes, waitForSync = False, json_default=str):
         """adds a vertex to the graph and returns it"""
         url = "%s/vertex/%s" % (self.getURL(), collectionName)
 
@@ -121,7 +121,7 @@ class Graph(with_metaclass(Graph_metaclass, object)):
         # self.database[collectionName].validateDct(docAttributes)
         store.validate()
 
-        r = self.connection.session.post(url, data = json.dumps(docAttributes, default=str), params = {'waitForSync' : waitForSync})
+        r = self.connection.session.post(url, data = json.dumps(docAttributes, default=json_default), params = {'waitForSync' : waitForSync})
 
         data = r.json()
         if r.status_code == 201 or r.status_code == 202:
